@@ -1,0 +1,143 @@
+/* ==========================================================================
+   components.css — loaded on EVERY page
+   Reusable UI pieces shared by more than one page:
+     1. Buttons
+     2. Metric cards
+     3. Search + filter toolbar
+     4. Tables, pills, priority dots, avatars
+     5. Modals (backdrop, shell, header, footer)
+     6. Forms (fields, inputs, banner)
+     7. Combobox (searchable dropdown)
+     8. Detail lists + section labels
+     9. Responsive tweaks
+   ========================================================================== */
+
+
+/* ---------- 1. Buttons ---------- */
+.btn{border-radius:var(--radius);padding:10px 16px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid transparent;display:inline-flex;align-items:center;justify-content:center;gap:7px;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{filter:brightness(1.06)}
+.btn-ghost{background:transparent;border-color:var(--border-strong);color:var(--text-primary)}
+.btn-ghost:hover{background:var(--surface-2)}
+
+
+/* ---------- 2. Metric cards (row of 4 counters above each table) ---------- */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:26px}
+.mcard{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.mcard .lbl{font-size:13px;color:var(--text-secondary);display:flex;align-items:center;gap:8px}
+.mcard .dot{width:9px;height:9px;border-radius:50%}
+.mcard .num{font-size:28px;font-weight:600;margin-top:8px}
+
+
+/* ---------- 3. Search + filter toolbar ---------- */
+.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search{position:relative;flex:1;min-width:240px}
+.search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:18px}
+.search input{width:100%;height:40px;padding:0 12px 0 38px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);font-size:14px;font-family:inherit}
+.toolbar select{height:40px;padding:0 12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);font-size:14px;font-family:inherit;cursor:pointer}
+.search input:focus,.toolbar select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--bg-accent)}
+
+
+/* ---------- 4. Tables, pills, priority dots, avatars ---------- */
+.panel{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:14px 18px;border-bottom:1px solid var(--border)}
+td{padding:15px 18px;border-bottom:1px solid var(--border);font-size:14px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--surface-1)}
+.tnum{color:var(--text-secondary);font-variant-numeric:tabular-nums}
+.cat-p{color:var(--text-muted);font-size:12px}   /* parent category above subcategory */
+.loc-s{color:var(--text-muted);font-size:12px}   /* space under property name */
+.pname{font-weight:500}                          /* person / property name in a table cell */
+.muted{color:var(--text-muted)}
+
+/* Status pills */
+.pill{display:inline-block;font-size:12.5px;font-weight:500;padding:4px 11px;border-radius:20px;white-space:nowrap}
+.p-new{background:#2372c4;color:#fff;font-weight:600}
+.p-ack{background:var(--surface-1);color:var(--text-secondary);border:1px solid var(--border)}
+.p-prog{background:var(--amber-bg);color:var(--amber-tx)}
+.p-res{background:var(--green-bg);color:var(--green-tx)}
+.p-closed{background:var(--surface-1);color:var(--text-muted);border:1px solid var(--border)}
+
+/* Priority indicator (colored dot + label) */
+.pri{display:inline-flex;align-items:center;gap:8px;color:var(--text-secondary)}
+.pri .d{width:9px;height:9px;border-radius:50%}
+
+/* Avatar + name */
+.who{display:inline-flex;align-items:center;gap:9px}
+.av{width:26px;height:26px;border-radius:50%;background:var(--bg-accent);color:var(--text-accent);font-size:11px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.av.none{background:transparent;border:1.5px dashed var(--border-strong)}   /* empty avatar = unassigned */
+
+
+/* ---------- 5. Modals ---------- */
+
+/* Backdrop = full-screen dim layer; JS adds .open to show it */
+.backdrop{position:fixed;inset:0;background:rgba(20,20,18,.5);display:none;align-items:flex-start;justify-content:center;padding:48px 20px;overflow:auto;z-index:100}
+.backdrop.open{display:flex}
+
+/* Modal shell: header / body / footer */
+.modal{background:var(--surface-2);width:100%;max-width:580px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.mhead{display:flex;align-items:flex-start;justify-content:space-between;padding:22px 24px 18px;border-bottom:1px solid var(--border);border-radius:16px 16px 0 0}
+.mhead h2{font-size:19px;font-weight:600}
+.mhead .meta{font-size:12.5px;color:var(--text-muted);margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--bg-accent);color:var(--text-accent);font-weight:500;padding:2px 9px;border-radius:20px;font-size:12px}
+.xbtn{background:transparent;border:none;color:var(--text-muted);font-size:22px;line-height:1;cursor:pointer;padding:2px;border-radius:6px}
+.xbtn:hover{background:var(--surface-1);color:var(--text-primary)}
+.mbody{padding:20px 24px}
+.mfoot{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid var(--border);background:var(--surface-1);border-radius:0 0 16px 16px}
+.mfoot.split{justify-content:space-between}   /* actions left, Close right */
+
+
+/* ---------- 6. Forms ---------- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
+.field{margin-bottom:16px}
+.field.nomb{margin-bottom:0}
+.field label{display:block;font-size:12.5px;font-weight:500;color:var(--text-secondary);margin-bottom:6px}
+.field label .req{color:var(--pri-high)}   /* red asterisk for required fields */
+textarea{width:100%;min-height:84px;padding:10px 12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);font-size:14px;font-family:inherit;resize:vertical;line-height:1.5}
+textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--bg-accent)}
+.hint{font-size:12px;color:var(--text-muted);margin-top:6px}
+
+/* Plain text / select inputs used in forms */
+.finput{width:100%;height:40px;padding:0 12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);font-size:14px;font-family:inherit}
+select.finput{cursor:pointer;padding-right:8px}
+.finput:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--bg-accent)}
+
+/* Validation banner shown at the top of a form */
+.banner{display:none;align-items:center;gap:9px;background:var(--bg-accent);color:var(--text-accent);border:1px solid var(--accent);border-radius:var(--radius);padding:10px 14px;font-size:13.5px;font-weight:500;margin-bottom:18px}
+.banner.show{display:flex}
+
+
+/* ---------- 7. Combobox (searchable dropdown built by js/combobox.js) ---------- */
+.combo{position:relative}
+.combo input{width:100%;height:40px;padding:0 34px 0 12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);font-size:14px;font-family:inherit;cursor:text}
+.combo input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--bg-accent)}
+.combo .chev{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:18px;pointer-events:none}
+.combo.disabled input{background:var(--surface-1);color:var(--text-muted);cursor:not-allowed}
+.combo-list{position:absolute;z-index:30;top:calc(100% + 4px);left:0;right:0;background:var(--surface-2);border:1px solid var(--border-strong);border-radius:var(--radius);box-shadow:0 8px 24px rgba(0,0,0,.14);max-height:224px;overflow:auto;display:none;padding:4px}
+.combo-list.open{display:block}
+.combo-opt{padding:9px 10px;border-radius:6px;cursor:pointer;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.combo-opt .p{color:var(--text-muted)}
+.combo-opt.active{background:var(--bg-accent);color:var(--text-accent)}
+.combo-opt.active .p{color:var(--text-accent)}
+.combo-empty{padding:10px;color:var(--text-muted);font-size:13px}
+
+
+/* ---------- 8. Detail lists + section labels (ticket modal and property modal) ---------- */
+.dl{display:grid;grid-template-columns:120px 1fr;gap:12px 18px;margin:0}
+.dl dt{color:var(--text-secondary);font-size:13px}
+.dl dd{font-size:14px}
+.dl dd.warn{color:var(--amber-tx);font-weight:500}   /* e.g. "Not yet acknowledged" */
+
+.d-section{margin-top:22px}
+.d-label{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);font-weight:600;margin-bottom:8px}
+.d-text{font-size:14px;line-height:1.6}
+.mini-empty{color:var(--text-muted);font-size:13px}
+
+
+/* ---------- 9. Responsive tweaks ---------- */
+@media (max-width:900px){
+  .metrics{grid-template-columns:repeat(2,1fr)}
+}
+/* Phone: single-column forms and definition lists */
+@media (max-width:560px){.grid2{grid-template-columns:1fr}.dl{grid-template-columns:1fr}.dl dt{margin-bottom:-8px}}

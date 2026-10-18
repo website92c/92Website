@@ -1,0 +1,14 @@
+/* ==========================================================================
+   admin.css — ONLY loaded by admin.html
+   ========================================================================== */
+
+/* Settings-style card (used for the demo data reset) */
+.admin-card{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px}
+.admin-card h2{font-size:15px;font-weight:600}
+.admin-card p{color:var(--text-secondary);font-size:13px;margin-top:2px;max-width:560px}
+
+/* "Coming soon" empty state */
+.placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:90px 20px;color:var(--text-muted)}
+.placeholder i{font-size:42px;margin-bottom:16px;opacity:.55}
+.placeholder h2{font-size:18px;font-weight:600;color:var(--text-secondary);margin-bottom:6px}
+.placeholder p{font-size:14px;max-width:340px}

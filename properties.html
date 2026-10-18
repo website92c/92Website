@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Properties · 92c</title>
+<!-- Tabler icon font -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/tabler-icons.min.css">
+<!-- Shared styles (every page) -->
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<!-- Styles for this page only -->
+<link rel="stylesheet" href="css/properties.css">
+</head>
+<body data-page="properties">
+<div class="app">
+
+  <!-- ===================== SIDEBAR (same on every page; "on" marks the current page) ===================== -->
+  <aside class="side">
+    <div class="brand">92c</div>
+    <nav class="nav">
+      <a href="index.html"><i class="ti ti-ticket"></i><span>Ticket dashboard</span></a>
+      <a href="people.html"><i class="ti ti-users"></i><span>People</span></a>
+      <a href="properties.html" class="on"><i class="ti ti-building"></i><span>Properties</span></a>
+      <a href="admin.html"><i class="ti ti-shield-lock"></i><span>Admin</span></a>
+    </nav>
+    <div class="rolebar">
+      <label>Preview as</label>
+      <select id="roleSwitch"><option>Admin</option><option>Staff</option><option>Viewer</option></select>
+    </div>
+    <div class="user"><span class="av" style="width:26px;height:26px;font-size:11px;background:var(--border-strong);color:var(--text-secondary)">JM</span><span>J. Morales</span></div>
+  </aside>
+
+  <main class="main">
+    <div class="head">
+      <div><h1>Properties</h1><div class="sub" id="r-subline"></div></div>
+      <button class="btn btn-primary" id="addPropBtn"><i class="ti ti-plus"></i>Add property</button>
+    </div>
+
+    <!-- Counters (filled in by renderProperties()) -->
+    <div class="metrics">
+      <div class="mcard"><div class="lbl"><span class="dot" style="background:#378add"></span>Properties</div><div class="num" id="r-total">0</div></div>
+      <div class="mcard"><div class="lbl"><span class="dot" style="background:#7f77dd"></span>Total size</div><div class="num" id="r-size">0</div></div>
+      <div class="mcard"><div class="lbl"><span class="dot" style="background:#ef9f27"></span>Open tickets</div><div class="num" id="r-open">0</div></div>
+      <div class="mcard"><div class="lbl"><span class="dot" style="background:#e24b4a"></span>High priority</div><div class="num" id="r-high">0</div></div>
+    </div>
+
+    <!-- Search and filters (visual only for now — not wired up) -->
+    <div class="toolbar">
+      <div class="search"><i class="ti ti-search"></i><input type="text" placeholder="Search properties"></div>
+      <select><option>All types</option><option>Office</option><option>Retail</option><option>Mixed-use</option></select>
+    </div>
+
+    <!-- Properties table: rows are rendered into #rtbody by renderProperties() -->
+    <div class="panel">
+      <table>
+        <thead><tr>
+          <th>Property</th><th style="width:150px">City</th><th style="width:130px">Type</th>
+          <th style="width:90px">Floors</th><th style="width:130px">Size</th><th style="width:120px">Open tickets</th>
+        </tr></thead>
+        <tbody id="rtbody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+
+<!-- ==========================================================================
+     MODALS (each is a .backdrop; JS adds/removes "open" to show it)
+     ========================================================================== -->
+
+<!-- ---------- Property detail / edit modal (content swapped by openProperty / editProperty) ---------- -->
+<div class="backdrop" id="propBackdrop">
+  <div class="modal" role="dialog" aria-label="Property details">
+    <div class="mhead">
+      <div><h2 id="pr-title"></h2><div class="meta" id="pr-sub"></div></div>
+      <button class="xbtn" id="pr-closeX" aria-label="Close">&times;</button>
+    </div>
+    <div class="mbody" id="pr-body"></div>
+    <div class="mfoot" id="pr-foot"></div>
+  </div>
+</div>
+
+<!-- ---------- New property modal ---------- -->
+<div class="backdrop" id="propNewBackdrop">
+  <div class="modal" role="dialog" aria-label="Create a new property">
+    <div class="mhead">
+      <div><h2>New property</h2><div class="meta">Added and last-modified dates stamp automatically</div></div>
+      <button class="xbtn" id="np-closeX" aria-label="Close">&times;</button>
+    </div>
+    <div class="mbody">
+      <div class="banner" id="np-banner"><i class="ti ti-alert-circle" style="font-size:18px"></i><span id="np-bannerText"></span></div>
+      <div class="field"><label>Property name <span class="req">*</span></label><input class="finput" id="np-name" type="text" placeholder="e.g. The Beacon"><div class="hint">Tickets are linked to properties by name, so make it exact.</div></div>
+      <div class="grid2">
+        <div class="field"><label>Address</label><input class="finput" id="np-address" type="text"></div>
+        <div class="field"><label>City</label><input class="finput" id="np-city" type="text"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Time zone</label><select class="finput" id="np-tz"></select></div>
+        <div class="field"><label>Type</label><select class="finput" id="np-type"></select></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Floors</label><input class="finput" id="np-floors" type="number" min="0"></div>
+        <div class="field"><label>Size (sqft)</label><input class="finput" id="np-size" type="number" min="0"></div>
+      </div>
+      <div class="field nomb"><label>Spaces / floors</label><textarea id="np-spaces" placeholder="One per line — e.g.&#10;Lobby&#10;Floor 2&#10;Roof"></textarea><div class="hint">Optional — one space per line. These feed the ticket location picker.</div></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-ghost" id="np-cancel" type="button">Cancel</button>
+      <button class="btn btn-primary" id="np-create" type="button">Create property</button>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts: data -> shared helpers -> this page -->
+<script src="js/data.js"></script>
+<script src="js/shared.js"></script>
+<script src="js/properties.js"></script>
+</body>
+</html>

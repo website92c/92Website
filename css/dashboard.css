@@ -1,0 +1,134 @@
+/* ==========================================================================
+   dashboard.css — ONLY loaded by index.html (Ticket dashboard)
+     1. Ticket table row states
+     2. Dashboard layout + Updates panel
+     3. New-ticket modal (priority picker)
+     4. Ticket detail modal (two columns, badges, activity timeline)
+     5. Attachments + attachment preview modal
+     6. Responsive tweaks
+   ========================================================================== */
+
+/* Respect users who prefer no motion: disable row hover transitions */
+@media (prefers-reduced-motion:reduce){tr.unack td,tr.unack td:first-child,tr.done td{transition:none}}
+
+
+/* ---------- 1. Ticket table row states ----------
+   .unack = brand-new tickets (highlighted), .done = closed tickets (dimmed) */
+#tbody tr{cursor:pointer}
+
+tr.unack td{background:var(--bg-accent);transition:background .18s ease}
+tr.unack td:first-child{border-left:3px solid var(--accent);transition:background .18s ease,border-color .18s ease}
+tr.unack:hover td{background:var(--bg-accent-hover)}
+tr.unack:hover td:first-child{border-left-color:#2372c4}
+tr.unack .tnum{color:var(--text-primary);font-weight:600}
+
+tr.done td{background:var(--bg-done);transition:background .18s ease}
+tr.done td,tr.done .tnum,tr.done .cat-p,tr.done .loc-s,tr.done .pri{color:var(--text-muted)}
+tr.done .av{background:var(--border-strong);color:var(--text-secondary)}
+tr.done:hover td{background:var(--surface-1)}
+
+
+/* ---------- 2. Dashboard layout + Updates panel ----------
+   Two columns: ticket table on the left, sticky "Updates" feed on the right. */
+.dash-layout{display:flex;gap:24px;align-items:flex-start}
+.dash-main{flex:1;min-width:0}
+
+.updates{width:340px;flex-shrink:0;position:sticky;top:24px;height:calc(100vh - 48px);display:flex;flex-direction:column;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.updates-head{padding:15px 18px;border-bottom:1px solid var(--border)}
+.updates-head h2{font-size:15px;font-weight:600}
+.updates-head .sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+.updates-feed{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:15px}
+
+/* A single update message */
+.msg-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:3px}
+.msg-tix{font-size:12px;font-weight:600;color:var(--text-accent);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msg-tix:hover{text-decoration:underline}
+.msg-time{font-size:11px;color:var(--text-muted);flex-shrink:0}
+.msg-body{font-size:13px;line-height:1.45;word-wrap:break-word;overflow-wrap:anywhere}
+.msg-author{font-size:11px;color:var(--text-muted);margin-top:3px}
+.updates-empty{color:var(--text-muted);font-size:13px;text-align:center;margin:auto 0}
+
+/* Composer at the bottom of the panel (ticket picker + text box + send) */
+.updates-composer{border-top:1px solid var(--border);padding:12px 14px;background:var(--surface-1)}
+.updates-composer .combo{margin-bottom:8px}
+.updates-composer .combo-list{top:auto;bottom:calc(100% + 4px);max-height:300px}   /* dropdown opens upward */
+.u-row{display:flex;gap:8px}
+.u-row input{flex:1;height:38px;padding:0 12px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-primary);font-size:13px;font-family:inherit}
+.u-row input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--bg-accent)}
+.u-send{width:38px;height:38px;border:none;border-radius:var(--radius);background:var(--accent);color:#fff;cursor:pointer;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:17px}
+.u-send:hover{filter:brightness(1.06)}
+
+
+/* ---------- 3. New-ticket modal: segmented priority picker ---------- */
+.seg{display:flex;gap:8px}
+.seg button{flex:1;height:40px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface-2);color:var(--text-secondary);font-size:14px;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.seg button:hover{background:var(--surface-1)}
+.seg button.on{border-color:var(--accent);background:var(--bg-accent);color:var(--text-accent);font-weight:500}
+.seg .d{width:9px;height:9px;border-radius:50%}
+
+
+/* ---------- 4. Ticket detail modal ---------- */
+.modal.modal-wide{max-width:1100px}
+.d-cols{display:flex;gap:26px;align-items:flex-start}
+.d-left{flex:1;min-width:0}
+.d-right{width:340px;flex-shrink:0;border-left:1px solid var(--border);padding-left:26px}
+.d-right>.d-label{margin-bottom:8px}
+#d-updates{max-height:340px;overflow-y:auto}
+#d-updates .msg+.msg{margin-top:12px}
+.d-right .u-row{margin-top:12px}
+
+.d-badges{display:flex;gap:8px;align-items:center;margin-bottom:20px}
+.pri-badge{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;padding:4px 11px;border-radius:20px;background:var(--surface-1);color:var(--text-secondary);border:1px solid var(--border)}
+.pri-badge .d{width:9px;height:9px;border-radius:50%}
+
+/* Activity timeline: vertical line with a dot per event */
+.d-activity{list-style:none}
+.d-activity li{position:relative;padding:0 0 14px 20px;font-size:13px;color:var(--text-secondary);border-left:1px solid var(--border);margin-left:4px}
+.d-activity li:last-child{border-left-color:transparent;padding-bottom:0}
+.d-activity li:before{content:'';position:absolute;left:-4px;top:4px;width:7px;height:7px;border-radius:50%;background:var(--border-strong)}
+.d-activity li.now:before{background:var(--accent)}   /* current status dot */
+.d-activity b{color:var(--text-primary);font-weight:500}
+.d-actions{display:flex;gap:8px}
+
+
+/* ---------- 5. Attachments + preview modal ---------- */
+#d-attach{display:flex;flex-wrap:wrap;gap:10px}
+.att{position:relative}
+.att-img{display:block;width:84px;height:84px;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.att-img img{width:100%;height:100%;object-fit:cover;display:block}
+.att-doc{display:flex;align-items:center;gap:8px;padding:9px 11px;border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text-primary);text-decoration:none;max-width:230px}
+.att-doc:hover{background:var(--surface-1)}
+.att-doc .att-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.att-doc,.att-img{cursor:pointer}
+/* Little red "x" that appears on hover to remove an attachment */
+.att-x{position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;background:var(--pri-high);color:#fff;border:2px solid var(--surface-2);cursor:pointer;font-size:12px;line-height:15px;padding:0;display:none}
+.att:hover .att-x{display:block}
+.att-empty{font-size:13px;color:var(--text-muted)}
+.attach-add{margin-top:10px;width:100%;padding:10px;border:1px dashed var(--border-strong);border-radius:var(--radius);background:transparent;color:var(--text-secondary);font-size:13px;font-family:inherit;cursor:pointer}
+.attach-add:hover{background:var(--surface-1);color:var(--text-primary)}
+
+/* Attachment preview modal (sits on top of the detail modal) */
+#previewBackdrop{align-items:center}
+.preview-modal{background:var(--surface-2);width:100%;max-width:900px;max-height:88vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);display:flex;flex-direction:column;overflow:hidden}
+.preview-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px 13px 18px;border-bottom:1px solid var(--border)}
+.preview-head #pv-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.preview-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.preview-actions .btn{padding:7px 12px;text-decoration:none}
+.preview-body{flex:1;overflow:auto;background:var(--surface-1);display:flex;align-items:center;justify-content:center;min-height:200px}
+.preview-body img{max-width:100%;max-height:80vh;display:block}
+.preview-body iframe{width:100%;height:80vh;border:none;background:#fff}
+.preview-msg{padding:48px 24px;text-align:center;color:var(--text-muted);font-size:14px}
+
+
+/* ---------- 6. Responsive tweaks ---------- */
+/* Stack the dashboard columns on medium screens */
+@media (max-width:1100px){
+  .dash-layout{flex-direction:column}
+  .updates{width:auto;position:static;height:auto;max-height:460px;align-self:stretch}
+}
+/* Stack the detail modal columns on narrow screens */
+@media (max-width:760px){
+  .modal.modal-wide{max-width:580px}
+  .d-cols{flex-direction:column}
+  .d-right{width:auto;border-left:none;border-top:1px solid var(--border);padding-left:0;padding-top:18px}
+}

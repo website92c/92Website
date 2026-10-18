@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>People · 92c</title>
+<!-- Tabler icon font -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/tabler-icons.min.css">
+<!-- Shared styles (every page) -->
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<!-- Styles for this page only -->
+<link rel="stylesheet" href="css/people.css">
+</head>
+<body data-page="people">
+<div class="app">
+
+  <!-- ===================== SIDEBAR (same on every page; "on" marks the current page) ===================== -->
+  <aside class="side">
+    <div class="brand">92c</div>
+    <nav class="nav">
+      <a href="index.html"><i class="ti ti-ticket"></i><span>Ticket dashboard</span></a>
+      <a href="people.html" class="on"><i class="ti ti-users"></i><span>People</span></a>
+      <a href="properties.html"><i class="ti ti-building"></i><span>Properties</span></a>
+      <a href="admin.html"><i class="ti ti-shield-lock"></i><span>Admin</span></a>
+    </nav>
+    <div class="rolebar">
+      <label>Preview as</label>
+      <select id="roleSwitch"><option>Admin</option><option>Staff</option><option>Viewer</option></select>
+    </div>
+    <div class="user"><span class="av" style="width:26px;height:26px;font-size:11px;background:var(--border-strong);color:var(--text-secondary)">JM</span><span>J. Morales</span></div>
+  </aside>
+
+  <main class="main">
+    <div class="head">
+      <div><h1>People</h1><div class="sub" id="p-subline"></div></div>
+    </div>
+
+    <!-- Counters (filled in by renderPeople()) -->
+    <div class="metrics">
+      <div class="mcard"><div class="lbl"><span class="dot" style="background:#378add"></span>Total people</div><div class="num" id="m-total">0</div></div>
+      <div class="mcard"><div class="lbl"><span class="dot" style="background:#5a9de0"></span>Admins</div><div class="num" id="m-admin">0</div></div>
+      <div class="mcard"><div class="lbl"><span class="dot" style="background:#1d9e75"></span>Active</div><div class="num" id="m-active">0</div></div>
+      <div class="mcard"><div class="lbl"><span class="dot" style="background:#ef9f27"></span>Pending invites</div><div class="num" id="m-pending">0</div></div>
+    </div>
+
+    <!-- Search and filters (visual only for now — not wired up) -->
+    <div class="toolbar">
+      <div class="search"><i class="ti ti-search"></i><input type="text" placeholder="Search people"></div>
+      <select><option>All roles</option><option>Admin</option><option>Staff</option><option>Viewer</option></select>
+      <select><option>All statuses</option><option>Active</option><option>Invited</option><option>Inactive</option></select>
+    </div>
+
+    <!-- People table: rows are rendered into #ptbody by renderPeople() -->
+    <div class="panel">
+      <table>
+        <thead><tr>
+          <th>Name</th><th style="width:150px">Role</th><th style="width:140px">Status</th>
+          <th style="width:150px">Properties</th><th style="width:120px">Open tickets</th><th style="width:120px">Last active</th>
+        </tr></thead>
+        <tbody id="ptbody"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- Scripts: data -> shared helpers -> this page -->
+<script src="js/data.js"></script>
+<script src="js/shared.js"></script>
+<script src="js/people.js"></script>
+</body>
+</html>

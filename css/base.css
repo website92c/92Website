@@ -1,0 +1,43 @@
+/* ==========================================================================
+   base.css — loaded on EVERY page
+   Design tokens (colors, radius, font), dark mode, reset, body defaults.
+   Change a color here and it changes across the whole site.
+   ========================================================================== */
+
+:root{
+  /* surfaces: page background, sidebar/hover, cards */
+  --surface-0:#f6f5f2; --surface-1:#efeee9; --surface-2:#ffffff;
+  /* text */
+  --text-primary:#22221f; --text-secondary:#63625c; --text-muted:#93928b;
+  /* borders */
+  --border:#e4e2db; --border-strong:#d3d1c7;
+  /* brand / accent blues */
+  --accent:#185fa5; --bg-accent:#e6f1fb; --bg-accent-hover:#d7e7f8; --text-accent:#0c447c;
+  /* status colors */
+  --amber-bg:#faeeda; --amber-tx:#854f0b;
+  --green-bg:#eaf3de; --green-tx:#3b6d11; --green-bd:#97c459;
+  /* priority dots */
+  --pri-high:#e24b4a; --pri-med:#ef9f27; --pri-low:#b4b2a9;
+  /* person status dots */
+  --st-active:#1d9e75; --st-invited:#ef9f27; --st-inactive:#b4b2a9;
+  /* background for closed / inactive rows */
+  --bg-done:#ebe9e3;
+  --radius:8px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+
+/* Dark mode: follows the operating system setting */
+@media (prefers-color-scheme: dark){:root{
+  --surface-0:#1c1c1a; --surface-1:#232320; --surface-2:#2a2a27;
+  --text-primary:#ececea; --text-secondary:#a8a79f; --text-muted:#78776f;
+  --border:#38372f; --border-strong:#4a4941;
+  --accent:#5a9de0; --bg-accent:#123048; --bg-accent-hover:#173c58; --text-accent:#9ec9f0;
+  --amber-bg:#3a2c14; --amber-tx:#e6b45e;
+  --green-bg:#243414; --green-tx:#a9cd73; --green-bd:#3b6d11;
+  --bg-done:#201f1d;
+}}
+
+/* Reset */
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{font-family:var(--font);background:var(--surface-0);color:var(--text-primary);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}

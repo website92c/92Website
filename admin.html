@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · 92c</title>
+<!-- Tabler icon font -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/tabler-icons.min.css">
+<!-- Shared styles (every page) -->
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<!-- Styles for this page only -->
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body data-page="admin">
+<div class="app">
+
+  <!-- ===================== SIDEBAR (same on every page; "on" marks the current page) ===================== -->
+  <aside class="side">
+    <div class="brand">92c</div>
+    <nav class="nav">
+      <a href="index.html"><i class="ti ti-ticket"></i><span>Ticket dashboard</span></a>
+      <a href="people.html"><i class="ti ti-users"></i><span>People</span></a>
+      <a href="properties.html"><i class="ti ti-building"></i><span>Properties</span></a>
+      <a href="admin.html" class="on"><i class="ti ti-shield-lock"></i><span>Admin</span></a>
+    </nav>
+    <div class="rolebar">
+      <label>Preview as</label>
+      <select id="roleSwitch"><option>Admin</option><option>Staff</option><option>Viewer</option></select>
+    </div>
+    <div class="user"><span class="av" style="width:26px;height:26px;font-size:11px;background:var(--border-strong);color:var(--text-secondary)">JM</span><span>J. Morales</span></div>
+  </aside>
+
+  <main class="main">
+    <div class="head"><div><h1>Admin</h1><div class="sub">Manage tickets, properties, people, and access</div></div></div>
+
+    <!-- Demo data reset: clears everything saved in this browser -->
+    <div class="admin-card">
+      <div>
+        <h2>Demo data</h2>
+        <p>Changes you make are saved in this browser so they carry between pages. Reset to start again from the original sample tickets, updates and properties.</p>
+      </div>
+      <button class="btn btn-ghost" id="resetBtn" type="button"><i class="ti ti-refresh"></i>Reset demo data</button>
+    </div>
+
+    <div class="placeholder"><i class="ti ti-shield-lock"></i><h2>Admin coming soon</h2><p>Elevated controls for managing records and assigning roles will live here.</p></div>
+  </main>
+</div>
+
+<!-- Scripts: data -> shared helpers -> this page -->
+<script src="js/data.js"></script>
+<script src="js/shared.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

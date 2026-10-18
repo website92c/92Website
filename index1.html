@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ticket dashboard · 92c</title>
+<!-- Tabler icon font (the <i class="ti ti-..."> icons used throughout) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/tabler-icons.min.css">
+<!-- Shared styles (every page) -->
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<!-- Styles for this page only -->
+<link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body data-page="dashboard">
+<div class="app">
+
+  <!-- ===================== SIDEBAR (same on every page; "on" marks the current page) ===================== -->
+  <aside class="side">
+    <div class="brand">92c</div>
+    <nav class="nav">
+      <a href="index.html" class="on"><i class="ti ti-ticket"></i><span>Ticket dashboard</span></a>
+      <a href="people.html"><i class="ti ti-users"></i><span>People</span></a>
+      <a href="properties.html"><i class="ti ti-building"></i><span>Properties</span></a>
+      <a href="admin.html"><i class="ti ti-shield-lock"></i><span>Admin</span></a>
+    </nav>
+    <!-- Demo helper: switch roles to preview what Admin / Staff / Viewer can see -->
+    <div class="rolebar">
+      <label>Preview as</label>
+      <select id="roleSwitch"><option>Admin</option><option>Staff</option><option>Viewer</option></select>
+    </div>
+    <div class="user"><span class="av" style="width:26px;height:26px;font-size:11px;background:var(--border-strong);color:var(--text-secondary)">JM</span><span>J. Morales</span></div>
+  </aside>
+
+  <main class="main dash-layout">
+    <!-- ===================== TICKET TABLE (left column) ===================== -->
+    <div class="dash-main">
+      <div class="head">
+        <div><h1>Ticket dashboard</h1><div class="sub" id="subline"></div></div>
+        <button class="btn btn-primary" id="newBtn"><i class="ti ti-plus"></i>New ticket</button>
+      </div>
+
+      <!-- Status counters (filled in by refresh()) -->
+      <div class="metrics">
+        <div class="mcard"><div class="lbl"><span class="dot" style="background:#378add"></span>New</div><div class="num" id="m-new">0</div></div>
+        <div class="mcard"><div class="lbl"><span class="dot" style="background:#7f77dd"></span>Acknowledged</div><div class="num" id="m-ack">0</div></div>
+        <div class="mcard"><div class="lbl"><span class="dot" style="background:#ef9f27"></span>In progress</div><div class="num" id="m-prog">0</div></div>
+        <div class="mcard"><div class="lbl"><span class="dot" style="background:#1d9e75"></span>Resolved</div><div class="num" id="m-res">0</div></div>
+      </div>
+
+      <!-- Search and filters (visual only for now — not wired up) -->
+      <div class="toolbar">
+        <div class="search"><i class="ti ti-search"></i><input type="text" placeholder="Search tickets"></div>
+        <select><option>All categories</option></select><select><option>All properties</option></select><select><option>All statuses</option></select>
+      </div>
+
+      <!-- Ticket table: rows are rendered into #tbody by renderTable() -->
+      <div class="panel">
+        <table>
+          <thead><tr>
+            <th style="width:70px">#</th><th>Category</th><th>Location</th>
+            <th style="width:120px">Priority</th><th style="width:130px">Status</th>
+            <th style="width:150px">Assigned</th><th style="width:110px">Created</th><th style="width:90px">Updated</th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===================== UPDATES FEED (right column) ===================== -->
+    <aside class="updates">
+      <div class="updates-head"><h2>Updates</h2><div class="sub">Post updates to a work order</div></div>
+      <div class="updates-feed" id="updates-feed"></div>
+      <div class="updates-composer">
+        <div class="combo" id="u-ticket"></div>
+        <div class="u-row"><input type="text" id="u-text" placeholder="Write an update…" maxlength="500"><button class="u-send" id="u-send" title="Post update" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6"/><path d="M6 12l6-6 6 6"/></svg></button></div>
+      </div>
+    </aside>
+  </main>
+</div>
+
+
+<!-- ==========================================================================
+     MODALS (each is a .backdrop; JS adds/removes "open" to show it)
+     ========================================================================== -->
+
+<!-- ---------- New ticket modal ---------- -->
+<div class="backdrop" id="backdrop">
+  <div class="modal" role="dialog" aria-label="Create a new ticket">
+    <div class="mhead">
+      <div><h2>New ticket</h2><div class="meta">Will be created as <span class="chip"><i class="ti ti-ticket" style="font-size:14px"></i><span id="nextChip">#1043</span></span><span>·</span><span>status set to New</span></div></div>
+      <button class="xbtn" id="closeX" aria-label="Close">&times;</button>
+    </div>
+    <div class="mbody">
+      <!-- Validation message appears here when required fields are missing -->
+      <div class="banner" id="banner"><i class="ti ti-alert-circle" style="font-size:18px"></i><span id="bannerText"></span></div>
+      <div class="grid2">
+        <div class="field"><label>Property <span class="req">*</span></label><div class="combo" id="c-property"></div></div>
+        <div class="field"><label>Floor / space <span class="req">*</span></label><div class="combo" id="c-space"></div></div>
+      </div>
+      <div class="field"><label>Category <span class="req">*</span></label><div class="combo" id="c-category"></div><div class="hint">Type to search across every category and subcategory.</div></div>
+      <div class="field"><label>Priority</label><div class="seg" id="seg">
+        <button data-v="Low" type="button"><span class="d" style="background:var(--pri-low)"></span>Low</button>
+        <button data-v="Medium" type="button" class="on"><span class="d" style="background:var(--pri-med)"></span>Medium</button>
+        <button data-v="High" type="button"><span class="d" style="background:var(--pri-high)"></span>High</button>
+      </div></div>
+      <div class="field"><label>Assign to</label><div class="combo" id="c-assignee"></div><div class="hint">Leave unassigned to triage later.</div></div>
+      <div class="field nomb"><label>Details <span class="req">*</span></label><textarea id="details" placeholder="Describe the issue — what's wrong, where exactly, and anything a technician should know."></textarea></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-ghost" id="cancel" type="button">Cancel</button>
+      <button class="btn btn-primary" id="create" type="button">Create ticket</button>
+    </div>
+  </div>
+</div>
+
+<!-- ---------- Ticket detail modal (two columns: info on the left, updates on the right) ---------- -->
+<div class="backdrop" id="detailBackdrop">
+  <div class="modal modal-wide" role="dialog" aria-label="Ticket details">
+    <div class="mhead">
+      <div><h2 id="d-title"></h2><div class="meta" id="d-sub"></div></div>
+      <button class="xbtn" id="d-closeX" aria-label="Close">&times;</button>
+    </div>
+    <div class="mbody">
+      <div class="d-cols">
+        <div class="d-left">
+          <div class="d-badges" id="d-badges"></div>
+          <!-- Only visible to roles with the "ticketAdmin" capability -->
+          <div id="d-controls">
+            <div class="d-label">Admin controls</div>
+            <div class="grid2" style="margin-bottom:22px">
+              <div class="field nomb"><label>Assign to</label><div class="combo" id="d-assignee"></div></div>
+              <div class="field nomb"><label>Priority</label><select class="finput" id="d-priority"></select></div>
+            </div>
+          </div>
+          <dl class="dl" id="d-fields"></dl>
+          <div class="d-section"><div class="d-label">Details</div><p class="d-text" id="d-details"></p></div>
+          <div class="d-section"><div class="d-label">Attachments</div>
+            <div id="d-attach"></div>
+            <button class="attach-add" id="d-attach-btn" type="button">+ Add photos or documents</button>
+            <input type="file" id="d-attach-input" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv" hidden>
+          </div>
+          <div class="d-section" style="margin-bottom:0"><div class="d-label">Activity</div><ul class="d-activity" id="d-activity"></ul></div>
+        </div>
+        <div class="d-right">
+          <div class="d-label">Updates</div>
+          <div id="d-updates"></div>
+          <div class="u-row" id="du-row"><input type="text" id="du-text" placeholder="Post an update…" maxlength="500"><button class="u-send" id="du-send" title="Post update" type="button"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6"/><path d="M6 12l6-6 6 6"/></svg></button></div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer buttons (status actions + Close) are built in openDetail() -->
+    <div class="mfoot split" id="d-foot"></div>
+  </div>
+</div>
+
+<!-- ---------- Attachment preview modal (images, PDFs, text) ---------- -->
+<div class="backdrop" id="previewBackdrop">
+  <div class="preview-modal" role="dialog" aria-label="Attachment preview">
+    <div class="preview-head">
+      <span id="pv-name"></span>
+      <div class="preview-actions"><a id="pv-download" class="btn btn-ghost" download>Download</a><button class="xbtn" id="pv-closeX" aria-label="Close">&times;</button></div>
+    </div>
+    <div class="preview-body" id="pv-body"></div>
+  </div>
+</div>
+
+<!-- Scripts: order matters (data -> shared helpers -> combobox component -> this page) -->
+<script src="js/data.js"></script>
+<script src="js/shared.js"></script>
+<script src="js/combobox.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
